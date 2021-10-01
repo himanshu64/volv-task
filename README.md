@@ -2,7 +2,7 @@
 
 A new Flutter project.
 
-![Screenshot](./ss/Screenshot 2021-10-02 at 2.44.34 AM.png)
+<img src="https://github.com/himanshu64/volv-task/blob/main/ss/Screenshot%202021-10-02%20at%202.44.34%20AM.png" height="400" width="250"/>
 ## Getting Started
 ```` 
 ```
