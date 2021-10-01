@@ -2,6 +2,7 @@
 
 A new Flutter project.
 
+![Screenshot](./ss/Screenshot 2021-10-02 at 2.44.34 AM.png)
 ## Getting Started
 ```` 
 ```
