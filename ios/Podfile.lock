@@ -16,10 +16,6 @@ PODS:
     - FirebaseAnalytics (~> 8.7.0)
   - Firebase/CoreOnly (8.7.0):
     - FirebaseCore (= 8.7.0)
-  - firebase_analytics (8.3.3):
-    - Firebase/Analytics (= 8.7.0)
-    - firebase_core
-    - Flutter
   - firebase_auth (3.1.2):
     - Firebase/Auth (= 8.7.0)
     - firebase_core
@@ -65,9 +61,6 @@ PODS:
     - GoogleUtilities/UserDefaults (~> 7.4)
     - PromisesObjC (< 3.0, >= 1.2)
   - Flutter (1.0.0)
-  - google_sign_in (0.0.1):
-    - Flutter
-    - GoogleSignIn (~> 5.0)
   - GoogleAppMeasurement (8.7.0):
     - GoogleAppMeasurement/AdIdSupport (= 8.7.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.4)
@@ -124,11 +117,9 @@ PODS:
 DEPENDENCIES:
   - Firebase
   - Firebase/Analytics
-  - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - Flutter (from `Flutter`)
-  - google_sign_in (from `.symlinks/plugins/google_sign_in/ios`)
   - GoogleSignIn
   - sign_in_with_apple (from `.symlinks/plugins/sign_in_with_apple/ios`)
 
@@ -151,23 +142,18 @@ SPEC REPOS:
     - PromisesObjC
 
 EXTERNAL SOURCES:
-  firebase_analytics:
-    :path: ".symlinks/plugins/firebase_analytics/ios"
   firebase_auth:
     :path: ".symlinks/plugins/firebase_auth/ios"
   firebase_core:
     :path: ".symlinks/plugins/firebase_core/ios"
   Flutter:
     :path: Flutter
-  google_sign_in:
-    :path: ".symlinks/plugins/google_sign_in/ios"
   sign_in_with_apple:
     :path: ".symlinks/plugins/sign_in_with_apple/ios"
 
 SPEC CHECKSUMS:
   AppAuth: 31bcec809a638d7bd2f86ea8a52bd45f6e81e7c7
   Firebase: bc9325d5ee2041524bac78a5213d0e530c651309
-  firebase_analytics: 72e3c5d712e43eeb0cb6f194f7cc10bc81e7d3fe
   firebase_auth: 3193124aa14a62b8abec3fd069df73ef378d2c5b
   firebase_core: f5ac1f2726a2bd0468cea0161eddeea3d83d7e3e
   FirebaseAnalytics: 52768800c2add1d84b751420cb4caaf8195f2c41
@@ -176,7 +162,6 @@ SPEC CHECKSUMS:
   FirebaseCoreDiagnostics: fe77f42da6329d6d83d21fd9d621a6b704413bfc
   FirebaseInstallations: 2563cb18a723ef9c6ef18318a49519b75dce613c
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
-  google_sign_in: c5cecea71f3be43282263550556e311c4cc03582
   GoogleAppMeasurement: 2be61ce546ad074dbe4dd545f222ac6033bb1d9e
   GoogleDataTransport: 85fd18ff3019bb85d3f2c551d04c481dedf71fc9
   GoogleSignIn: 7137d297ddc022a7e0aa4619c86d72c909fa7213
