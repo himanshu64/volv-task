@@ -3,16 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:volv/core/viewmodels/login_view_model.dart';
+import 'package:volv/ui/views/base_view.dart';
 import 'package:volv/ui/views/verify_view.dart';
 import 'package:volv/ui/widgets/custom_button.dart';
 import 'package:volv/ui/widgets/custom_full_screen_dialog.dart';
 import 'package:volv/ui/widgets/user_text_field.dart';
 
 class LoginView extends StatelessWidget {
-  static const routeArgs = '/';
+  static const routeArgs = '/login-view';
 
   LoginView({Key? key}) : super(key: key);
   final phoneController = TextEditingController();
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
 
   String selectedCountryCode = '+91';
 
@@ -44,7 +47,7 @@ class LoginView extends StatelessWidget {
         CustomFullScreenDialog.cancelDialog(
           context: context,
         );
-        Navigator.of(context).pushReplacementNamed(VerifyView.routeArgs,
+        Navigator.of(context).pushNamed(VerifyView.routeArgs,
             arguments: selectedCountryCode + phoneController.text.toString());
       }).catchError((e) {
         CustomFullScreenDialog.cancelDialog(context: context);
@@ -66,6 +69,7 @@ class LoginView extends StatelessWidget {
     print("New Country selected: " + countryCode.toString());
   }
 
+  final _formState = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
@@ -77,69 +81,122 @@ class LoginView extends StatelessWidget {
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Align(
-                      alignment: Alignment.topCenter,
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Text(
-                          'Volv Firebase Phone Auth Task',
-                          style: Theme.of(context).textTheme.headline6,
-                        ),
-                      )),
-                  Align(
-                      alignment: Alignment.center,
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Text(
-                          'Please enter your number below',
-                          style: Theme.of(context).textTheme.headline6,
-                        ),
-                      )),
-                  UserTextField(
-                    prefixChild: CountryCodePicker(
-                      initialSelection: selectedCountryCode,
-                      onChanged: _onCountryChange,
-                      showCountryOnly: false,
-                      showOnlyCountryWhenClosed: false,
-                    ),
-                    titleLabel: 'Enter your number',
-                    maxLength: 10,
-                    icon: Icons.smartphone,
-                    controller: phoneController,
-                    inputType: TextInputType.phone,
-                  ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 10),
-                    constraints: const BoxConstraints(maxWidth: 500),
-                    child: CustomButton(
-                      title: 'Submit',
-                      onpressed: () {
-                        if (phoneController.text.isNotEmpty) {
-                          verifyPhone(context);
-                        } else {
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(const SnackBar(
-                            behavior: SnackBarBehavior.floating,
-                            backgroundColor: Colors.red,
-                            content: Text(
-                              'Please enter a phone number',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ));
+              child: Form(
+                key: _formState,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Align(
+                        alignment: Alignment.topCenter,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Text(
+                            'Volv Firebase Phone Auth Task',
+                            style: Theme.of(context).textTheme.headline6,
+                          ),
+                        )),
+                    Align(
+                        alignment: Alignment.center,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Text(
+                            'Please enter your number below',
+                            style: Theme.of(context).textTheme.headline6,
+                          ),
+                        )),
+                    UserTextField(
+                      titleLabel: 'Enter your name',
+                      maxLength: 30,
+                      icon: Icons.people,
+                      controller: nameController,
+                      inputType: TextInputType.text,
+                      validator: (String? value) {
+                        if (value!.isEmpty) {
+                          return "Enter your name";
                         }
+                        null;
                       },
                     ),
-                  ),
-                ],
+                    UserTextField(
+                      titleLabel: 'Enter your email',
+                      maxLength: 25,
+                      icon: Icons.email,
+                      controller: emailController,
+                      inputType: TextInputType.emailAddress,
+                      validator: (String? value) {
+                        if (!isEmail(value!)) {
+                          return "enter valid email";
+                        }
+                        null;
+                      },
+                    ),
+                    UserTextField(
+                      prefixChild: CountryCodePicker(
+                        initialSelection: selectedCountryCode,
+                        onChanged: _onCountryChange,
+                        showCountryOnly: false,
+                        showOnlyCountryWhenClosed: false,
+                      ),
+                      titleLabel: 'Enter your number',
+                      maxLength: 10,
+                      icon: Icons.smartphone,
+                      controller: phoneController,
+                      inputType: TextInputType.phone,
+                      validator: (String? value) {
+                        if (value!.isEmpty) {
+                          return "Enter valid phone number";
+                        }
+                        return null;
+                      },
+                    ),
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
+                      constraints: const BoxConstraints(maxWidth: 500),
+                      child: CustomButton(
+                        title: 'Submit',
+                        onpressed: () {
+                          if (_formState.currentState!.validate()) {
+                            Provider.of<LoginViewModel>(context,listen: false).setUserLogged(
+                                nameController.text.trim(),
+                                emailController.text.trim(),
+                                phoneController.text.trim());
+                            verifyPhone(context);
+                          } else {
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
+                              behavior: SnackBarBehavior.floating,
+                              backgroundColor: Colors.red,
+                              content: Text(
+                                'Fill All the fields',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ));
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
         ),
       ),
     );
+  }
+
+  bool isEmail(String string) {
+    if (string == null || string.isEmpty) {
+      return false;
+    }
+
+    const pattern = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
+    final regExp = RegExp(pattern);
+
+    if (!regExp.hasMatch(string)) {
+      return false;
+    }
+    return true;
   }
 }

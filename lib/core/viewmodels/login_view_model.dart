@@ -1,14 +1,27 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/widgets.dart';
+import 'package:volv/core/db/shared_prefs.dart';
 
 import 'package:volv/core/viewmodels/base_view_model.dart';
+import 'package:volv/ui/views/home_view.dart';
+import 'package:volv/ui/views/login_view.dart';
 
 class LoginViewModel extends BaseViewModel {
   final _firebaseAuth = FirebaseAuth.instance;
+
+  Future<bool> checkUserLoggedIn(BuildContext context) {
+    return MySharedPreferences.instance.getBooleanValue('isLoggedIn');
+  }
+
   late String verificationId;
+  late String name = '';
+  late String email = '';
+  late String mobileNumber = '';
 
   Future<void> verifyPhone(String countryCode, String mobile) async {
     var mobileToSend = mobile;
-    // ignore: prefer_function_declarations_over_variables
+
+    verificationId = '';
     PhoneCodeSent smsOTPSent = (String verId, [int? forceCodeResend]) {
       verificationId = verId;
     };
@@ -16,8 +29,6 @@ class LoginViewModel extends BaseViewModel {
       await _firebaseAuth.verifyPhoneNumber(
           phoneNumber: mobileToSend,
           codeAutoRetrievalTimeout: (String verId) {
-            //Starts the phone number verification process for the given phone number.
-            //Either sends an SMS with a 6 digit code to the phone number specified, or sign's the user in and [verificationCompleted] is called.
             verificationId = verId;
           },
           codeSent: smsOTPSent,
@@ -59,6 +70,18 @@ class LoginViewModel extends BaseViewModel {
   }
 
   Future<void> signOut() async {
-    return _firebaseAuth.signOut();
+    return _firebaseAuth
+        .signOut()
+        .then((value) => MySharedPreferences.instance.removeAll());
+  }
+
+  setUserLogged(String name, String email, String phone) {
+    MySharedPreferences.instance.setBooleanValue('isLoggedIn', true);
+    MySharedPreferences.instance.setStringValue('name', name);
+    MySharedPreferences.instance.setStringValue('email', email);
+    MySharedPreferences.instance.setStringValue('mobile', phone);
+    mobileNumber = phone;
+    this.email = email;
+    this.name = name;
   }
 }

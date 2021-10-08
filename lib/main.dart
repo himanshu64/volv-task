@@ -2,9 +2,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:volv/core/locator.dart';
+import 'package:volv/core/viewmodels/home_view_model.dart';
 import 'package:volv/core/viewmodels/login_view_model.dart';
 import 'package:volv/ui/views/home_view.dart';
 import 'package:volv/ui/views/login_view.dart';
+import 'package:volv/ui/views/root_view.dart';
 import 'package:volv/ui/views/verify_view.dart';
 import 'package:volv/ui/widgets/navigator_key.dart';
 
@@ -37,16 +39,24 @@ class MyApp extends StatelessWidget with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider.value(
-      value: LoginViewModel(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<LoginViewModel>(
+          create: (_) => LoginViewModel(),
+        ),
+        ChangeNotifierProvider<HomeViewModel>(
+          create: (_) => HomeViewModel(),
+        ),
+      ],
       child: MaterialApp(
         title: 'volv',
         theme: ThemeData(
             primaryColor: Colors.blue, colorScheme: ColorScheme.fromSwatch()),
         debugShowCheckedModeBanner: false,
-        initialRoute: LoginView.routeArgs,
+        initialRoute: '/',
         navigatorKey: navigatorKey,
         routes: {
+          RootView.routeArgs: (ctx) => const RootView(),
           LoginView.routeArgs: (ctx) => LoginView(),
           VerifyView.routeArgs: (ctx) => VerifyView(),
           HomeView.routeArgs: (ctx) => const HomeView(),

@@ -6,12 +6,14 @@ class UserTextField extends StatelessWidget {
   final int maxLength;
   final IconData icon;
   final TextEditingController controller;
+  final String? Function(String?)? validator;
   final TextInputType inputType;
   const UserTextField(
       {Key? key,
       required this.titleLabel,
       required this.maxLength,
       this.prefixChild,
+      this.validator,
       required this.icon,
       required this.controller,
       required this.inputType})
@@ -20,10 +22,11 @@ class UserTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(10.0),
-      child: TextField(
+      child: TextFormField(
         maxLength: maxLength,
         controller: controller,
         keyboardType: inputType,
+        validator: validator,
         decoration: InputDecoration(
           labelText: titleLabel,
           suffixIcon: Icon(
